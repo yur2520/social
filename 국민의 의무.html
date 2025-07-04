@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대한민국 국민의 의무 안내</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding: 0 1.5rem;
+        }
+        .accordion-button.active + .accordion-content {
+            max-height: 2000px; /* 충분히 큰 값으로 설정 */
+            padding: 1.5rem;
+        }
+        .accordion-button .icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-button.active .icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <!-- Header -->
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-2">대한민국 국민의 의무</h1>
+            <p class="text-lg sm:text-xl text-gray-600">핵심 안내서</p>
+        </header>
+
+        <!-- Intro Section -->
+        <section class="bg-white p-6 rounded-2xl shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-blue-500 mb-3">의무가 무엇일까요?</h2>
+            <p class="text-base leading-relaxed">
+                권리가 있으면 의무도 있어요! 의무란 우리가 반드시 지켜야 할 책임이에요. 마치 축구 경기에서 규칙을 지켜야 하는 것처럼, 우리 모두가 행복하게 살기 위해서는 각자가 해야 할 일들이 있답니다. 우리나라 헌법에는 중요한 의무들이 정해져 있어요.
+            </p>
+        </section>
+
+        <!-- Accordion for Duties -->
+        <div class="space-y-4">
+            <!-- 교육의 의무 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                <button class="accordion-button w-full flex justify-between items-center p-5 text-left">
+                    <div class="flex items-center">
+                        <span class="text-3xl mr-4">📚</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-green-600">교육의 의무</h3>
+                            <p class="text-gray-500">"열심히 배워야 해요"</p>
+                        </div>
+                    </div>
+                    <span class="icon text-2xl text-gray-500">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <h4 class="font-bold text-lg mb-2 text-green-700">왜 교육받아야 할까요?</h4>
+                    <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>다양한 지식과 실력을 갖추어 내가 원하는 미래를 실현하기 위해서</li>
+                        <li>여러가지 문제를 해결할 수 있는 사람이 되기 위해서</li>
+                        <li>나라가 발전하는 데 도움이 되기 위해서</li>
+                        <li>다른 사람들과 잘 어울려 살기 위해서</li>
+                    </ul>
+                    <h4 class="font-bold text-lg mb-2 text-green-700">우리가 지켜야 할 교육의 의무</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>학교 다니기:</strong> 정해진 의무교육을 성실히 받아야 해요.</li>
+                        <li><strong>수업에 집중하기:</strong> 수업시간에 열심히 듣고, 궁금한 것은 질문해요.</li>
+                        <li><strong>과제와 숙제 하기:</strong> 주어진 과제와 준비물을 잘 챙겨요.</li>
+                        <li><strong>학교 규칙 지키기:</strong> 공동체의 규칙을 존중하고 지켜요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 근로의 의무 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                <button class="accordion-button w-full flex justify-between items-center p-5 text-left">
+                    <div class="flex items-center">
+                        <span class="text-3xl mr-4">💼</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-orange-600">근로의 의무</h3>
+                            <p class="text-gray-500">"성실하게 일해야 해요"</p>
+                        </div>
+                    </div>
+                    <span class="icon text-2xl text-gray-500">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <h4 class="font-bold text-lg mb-2 text-orange-700">왜 일해야 할까요?</h4>
+                    <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>나와 가족이 생활하기 위해서</li>
+                        <li>사회에 도움이 되기 위해서</li>
+                        <li>자신의 꿈을 이루기 위해서</li>
+                    </ul>
+                    <h4 class="font-bold text-lg mb-2 text-orange-700">우리가 지킬 수 있는 근로의 의미</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>현재 할 수 있는 '일':</strong> 학생의 본분인 공부, 집안일 돕기, 맡은 역할 책임감 있게 하기.</li>
+                        <li><strong>미래를 위한 준비:</strong> 약속 지키기, 책임감 갖기, 함께 문제를 해결하는 방법 익히기.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 환경보전의 의무 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                <button class="accordion-button w-full flex justify-between items-center p-5 text-left">
+                    <div class="flex items-center">
+                        <span class="text-3xl mr-4">🌍</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-teal-600">환경보전의 의무</h3>
+                            <p class="text-gray-500">"지구를 지켜야 해요"</p>
+                        </div>
+                    </div>
+                    <span class="icon text-2xl text-gray-500">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <h4 class="font-bold text-lg mb-2 text-teal-700">왜 환경을 보호해야 할까요?</h4>
+                     <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>우리와 후손들이 건강하게 살기 위해서</li>
+                        <li>동물과 식물을 보호하기 위해서</li>
+                        <li>깨끗한 공기와 물을 마시기 위해서</li>
+                    </ul>
+                    <h4 class="font-bold text-lg mb-2 text-teal-700">우리가 실천할 수 있는 환경보전</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>쓰레기 줄이고 분리수거하기:</strong> 텀블러 사용, 올바른 분리수거.</li>
+                        <li><strong>에너지 아껴 쓰기:</strong> 안 쓰는 전등 끄기, 물 아껴 쓰기.</li>
+                        <li><strong>자연 보호하기:</strong> 나무나 꽃을 꺾지 않고, 동물을 괴롭히지 않아요.</li>
+                        <li><strong>친환경 생활하기:</strong> 가까운 거리는 걷거나 자전거 타기, 음식 남기지 않기.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 납세의 의무 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                <button class="accordion-button w-full flex justify-between items-center p-5 text-left">
+                    <div class="flex items-center">
+                        <span class="text-3xl mr-4">💰</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-purple-600">납세의 의무</h3>
+                            <p class="text-gray-500">"세금을 내야 해요"</p>
+                        </div>
+                    </div>
+                    <span class="icon text-2xl text-gray-500">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <h4 class="font-bold text-lg mb-2 text-purple-700">세금이 무엇이고 왜 내야 할까요?</h4>
+                    <p class="mb-4">세금은 나라가 우리를 위해 학교, 병원, 공원 등을 만들고, 경찰관, 소방관 분들이 일할 수 있게 하는 데 쓰이는 돈이에요.</p>
+                    <h4 class="font-bold text-lg mb-2 text-purple-700">우리와 세금의 관계</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>일상 속의 세금:</strong> 문구점이나 마트에서 물건을 살 때 가격에 '부가가치세'가 포함되어 있어요.</li>
+                        <li><strong>세금의 혜택 받기:</strong> 학교 다니기, 도서관 이용하기, 공원에서 놀기 등 세금 덕분에 누리는 것들이 많아요.</li>
+                        <li><strong>올바른 납세 정신 기르기:</strong> 공공시설을 소중히 사용하고, 영수증 받는 습관을 길러요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 국방의 의무 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                <button class="accordion-button w-full flex justify-between items-center p-5 text-left">
+                    <div class="flex items-center">
+                        <span class="text-3xl mr-4">🛡️</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-red-600">국방의 의무</h3>
+                            <p class="text-gray-500">"나라를 지켜야 해요"</p>
+                        </div>
+                    </div>
+                    <span class="icon text-2xl text-gray-500">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <h4 class="font-bold text-lg mb-2 text-red-700">왜 나라를 지켜야 할까요?</h4>
+                    <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>우리가 평화롭고 안전하게 살기 위해서</li>
+                        <li>우리의 자유와 권리를 보호하기 위해서</li>
+                        <li>후손들에게 좋은 나라를 물려주기 위해서</li>
+                    </ul>
+                    <h4 class="font-bold text-lg mb-2 text-red-700">우리가 실천할 수 있는 국방 정신</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>나라 사랑하는 마음 기르기:</strong> 태극기를 소중히 하고, 애국가를 경건하게 불러요.</li>
+                        <li><strong>역사 공부하고 기억하기:</strong> 우리나라의 역사를 바로 알고, 역사에 자부심을 가져요.</li>
+                        <li><strong>몸과 마음 건강하게 기르기:</strong> 운동을 열심히 하고, 올바른 인성을 길러요.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Importance Section -->
+        <section class="bg-white p-6 rounded-2xl shadow-md mt-8">
+            <h2 class="text-2xl font-bold text-indigo-500 mb-3">의무를 지키는 것이 왜 중요할까요?</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">👍 나에게 좋은 점</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>다른 사람에게 존중받아요.</li>
+                        <li>내 권리도 더 잘 보장받을 수 있어요.</li>
+                        <li>책임감 있는 사람으로 성장해요.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🤝 사회에 좋은 점</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>모두가 안전하고 행복하게 살 수 있어요.</li>
+                        <li>질서 있고 평화로운 사회가 돼요.</li>
+                        <li>나라가 더욱 발전할 수 있어요.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <footer class="mt-8 p-6 bg-blue-600 text-white rounded-2xl shadow-lg text-center">
+            <h2 class="text-2xl font-bold mb-3">권리와 의무는 함께 가요!</h2>
+            <p class="text-blue-100 leading-relaxed">
+                권리와 의무는 동전의 양면과 같아요. 내가 권리를 누리려면 의무도 성실히 지켜야 해요.<br>
+                의무를 지키는 것은 나와 우리 모두가 행복하게 살기 위한 약속입니다.<br>
+                
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        // JavaScript for accordion functionality
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const isActive = button.classList.contains('active');
+                
+                // Close all accordions first
+                document.querySelectorAll('.accordion-button').forEach(btn => {
+                    if (btn !== button) {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                // Toggle the clicked one
+                button.classList.toggle('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
