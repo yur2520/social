@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대한민국 병역 제도, 쉽고 자세하게 알아보기!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #005bbb, #00a8e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- 헤더 -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">대한민국 병역 제도</h1>
+            <p class="text-lg text-gray-600">많은 친구들이 궁금해하는 대한민국의 병역 제도에 대한 설명</p>
+        </header>
+
+        <!-- 병역 이행률 -->
+        <section class="mb-12">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-4 text-gray-900">얼마나 많은 사람이 병역 의무를 할까?</h2>
+                <div class="space-y-4 text-lg">
+                    <p>대한민국 헌법에 따라, 모든 국민은 나라를 지킬 의무가 있어요. 이를 '국방의 의무'라고 부르죠. 그리고 이 중에서 신체가 건강한 남성에게는 병역의 의무를 명시하고 있습니다. 그렇다면 대한민국의 병역 의무는 어떤 형태로 이루어지고 있을까요?</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-blue-800">병역 이행률: 75.5%</h3>
+                            <p class="text-gray-700 mt-2">22대 국회의원들과 비슷한 나이대의 일반 국민(1940~1991년생) 100명 중 약 76명은 현역이나 보충역 등 어떤 형태로든 병역 의무를 마쳤다는 뜻이에요.</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-green-800">현역 판정률: 85.5% (2024년 기준)</h3>
+                            <p class="text-gray-700 mt-2">최근 신체검사를 받은 사람 100명 중 약 86명은 군부대에서 복무할 수 있을 만큼 건강하다는 판정을 받았다는 의미예요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 병역 복무 형태 -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8">병역 복무 형태 <br class="md:hidden"></h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 현역 -->
+                <div class="card border-t-4 border-blue-500">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-8 h-8 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <h3 class="text-2xl font-bold">현역 (現役)</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">군복을 입고 군부대에서 직접 훈련하며 나라를 지키는 가장 대표적인 복무 형태예요.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><strong>육군/해병대:</strong> 18개월</li>
+                        <li><strong>해군:</strong> 20개월</li>
+                        <li><strong>공군:</strong> 21개월</li>
+                        <li class="pt-2"><strong>상근예비역:</strong> 군인 신분이지만, 집에서 출퇴근하며 우리 동네를 지켜요. (18개월)</li>
+                    </ul>
+                </div>
+
+                <!-- 보충역 -->
+                <div class="card border-t-4 border-green-500">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        <h3 class="text-2xl font-bold">보충역 (補充役)</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">군부대 대신, 사회 곳곳의 기관에서 공익을 위한 업무를 하며 병역 의무를 다해요.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><strong>사회복무요원:</strong> 주민센터, 복지시설 등에서 사회 서비스나 행정 업무를 도와요. (21개월)</li>
+                        <li><strong>산업기능요원:</strong> 지정된 회사에서 일하며 우리나라 산업 발전에 기여해요. (23~34개월)</li>
+                        <li><strong>전문연구요원:</strong> 연구소에서 과학 기술을 연구해요. (3년)</li>
+                    </ul>
+                </div>
+
+                <!-- 대체역 -->
+                <div class="card border-t-4 border-purple-500">
+                     <div class="flex items-center mb-4">
+                        <svg class="w-8 h-8 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <h3 class="text-2xl font-bold">대체역 (代替役)</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">개인적인 신념이나 종교적인 이유로 총을 들 수 없는 사람들을 위한 제도예요.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><strong>대체복무요원:</strong> 군사 훈련 대신, 교도소와 같은 시설에서 합숙하며 공익적인 업무를 수행해요. (36개월)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 현역병 비율 추정 -->
+        <section>
+            <div class="card bg-gray-800 text-white">
+                <h2 class="text-2xl font-bold mb-4 text-white">그럼, 대부분 어디로 가게 될까? 🤔</h2>
+                <div class="space-y-4 text-lg text-gray-300">
+                    <p>현역으로 가야 한다면, 대부분의 친구들은 어느 군으로 가게 될까요? 보통은 가장 많은 인원이 필요한 <strong class="text-yellow-300">육군</strong>으로 가게 됩니다.</p>
+                    <p>각 군의 입영 비율은 해마다 조금씩 다르지만, 보통 현역 입영자 100명 중 <strong class="text-cyan-300">85명 이상은 육군</strong>, 나머지가 해군, 공군, 해병대로 가요.</p>
+                    <div class="mt-6 p-6 bg-gray-700 rounded-lg">
+                        <p class="text-xl text-center">
+                            2024년 기준으로 신체검사를 받은 건강한 남학생 <strong class="text-white font-bold">100명</strong>이 있다면, <br>그중 약 <strong class="text-green-300 font-bold text-2xl">73명에서 80명</strong> 정도는 <strong class="text-green-300">육군 또는 해군 현역</strong>으로 복무하게 될 것으로 예상할 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 푸터 -->
+        <footer class="text-center mt-12 py-6 border-t">
+            *정확한 각 수치는 KOSIS 국가통계포털 및 병무청에서 확인할 수 있음
+            <p class="text-gray-600"> </p>
+        </footer>
+    </div>
+
+</body>
+</html>
