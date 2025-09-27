@@ -7,7 +7,8 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="../styles.css">
     <title>역사 카드 순서 맞추기</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         body {
             font-family: 'SUITE Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -33,6 +34,9 @@
         h1 {
             color: #333;
             margin-bottom: 20px;
+        }
+        
+        hr{color:#ccc;
         }
 
         #options,
@@ -65,8 +69,8 @@
 
         .card.sortable-chosen {
             cursor: grabbing;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            border: 2px solid #007bff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset 1px 1px 2px rgba(255, 255, 255, 0.596);
+            border: 2px solid #ffffff;
         }
 
         #card-container {
@@ -77,11 +81,12 @@
         }
 
         button {
-            background-color: #007bff;
+            background-color: var(--primary-blue);
             color: white;
             border: none;
             padding: 12px 25px;
             border-radius: 8px;
+            font-family: 'SUITE Variable';
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -89,10 +94,9 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--d-blue);
         }
 
-        /* 버튼 비활성화 스타일 */
         button:disabled {
             background-color: #6c757d;
             cursor: not-allowed;
@@ -104,7 +108,6 @@
             font-weight: bold;
         }
 
-        /* 게임 상단 정보 (타이머, 하트) */
         #game-info {
             display: flex;
             justify-content: space-between;
@@ -121,18 +124,15 @@
 
         #attempts-display {
             font-size: 1.8em;
-            /* 하트 크기 */
         }
 
         .heart {
-            color: #dc3545;
-            /* 빨간 하트 */
+            color: #ec4d5d;
             transition: color 0.3s;
         }
 
         .heart.used {
             color: #ced4da;
-            /* 회색 하트 */
         }
 
         #timer-bar-container {
@@ -148,7 +148,7 @@
             height: 100%;
             width: 100%;
             border-radius: 6px;
-            background-color: #28a745;
+            background-color: var(--d-green);
             transition: width 1s linear, background-color 0.5s;
         }
 
@@ -178,11 +178,17 @@
         }
 
         .modal-content #next-stage-btn {
-            background-color: #28a745;
+            background-color: var(--primary-green);
         }
 
         .modal-content #next-stage-btn:hover {
-            background-color: #218838;
+            background-color: var(--d-green);
+        }
+
+        .lottie-container {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto 0;
         }
     </style>
 </head>
@@ -190,17 +196,18 @@
 <body>
 
     <div id="game-container">
-        <h1>📜 역사 카드 순서 맞추기</h1>
+        <h1>역사 카드 순서 맞추기</h1>
 
         <div id="options">
+            <hr>
             <div class="option-group">
-                <h3>출제 범위를 선택하세요:</h3>
+                <h3>출제 범위</h3>
                 <label><input type="checkbox" name="era" value="삼국시대" checked> 삼국시대</label>
                 <label><input type="checkbox" name="era" value="남북국시대" checked> 남북국 시대</label>
                 <label><input type="checkbox" name="era" value="후삼국시대" checked> 후삼국 시대</label>
             </div>
             <div class="option-group">
-                <h3>타이머를 선택하세요:</h3>
+                <h3>타이머</h3>
                 <label><input type="radio" name="timer" value="0" checked> 없음</label>
                 <label><input type="radio" name="timer" value="60"> 1분</label>
                 <label><input type="radio" name="timer" value="120"> 2분</label>
@@ -227,14 +234,16 @@
 
     <div id="correct-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="color: green;">🎉 정답입니다! 대단해요!</h2>
+            <h2 style="color: rgb(43, 80, 43);">🎉 정답입니다!</h2>
+            <div id="lottie-correct" class="lottie-container"></div>
             <button id="next-stage-btn">다음 문제 풀기</button>
             <button class="restart-btn">처음 화면으로</button>
         </div>
     </div>
     <div id="timeout-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="color: red;">⏰ 시간 초과!</h2>
+            <h2 id="timeout-modal-title" style="color: rgb(83, 35, 35);"></h2>
+            <div id="lottie-failed" class="lottie-container"></div>
             <button id="retry-btn">다시 도전하기</button>
             <button class="restart-btn">처음 화면으로</button>
         </div>
@@ -242,7 +251,14 @@
 
     <script>
         const allEvents = [{ era: '삼국시대', text: ['백제 근초고왕이 왕위에 오름', '백제의 전성기'] }, { era: '삼국시대', text: ['고구려 광개토대왕이 왕위에 오름'] }, { era: '삼국시대', text: ['고구려 장수왕이 왕위에 오름'] }, { era: '삼국시대', text: ['신라 진흥왕이 왕위에 오름', '신라의 전성기'] }, { era: '남북국시대', text: ['신라가 당과 동맹을 맺음', '나당동맹'] }, { era: '남북국시대', text: ['태종 무열왕이 왕위에 오름', '김춘추가 왕위에 오름'] }, { era: '남북국시대', text: ['백제 멸망'] }, { era: '남북국시대', text: ['고구려 멸망'] }, { era: '남북국시대', text: ['신라가 삼국을 통일'] }, { era: '남북국시대', text: ['발해가 건국됨'] }, { era: '후삼국시대', text: ['후백제가 건국됨'] }, { era: '후삼국시대', text: ['후고구려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 후삼국을 통일함'] }];
-        const pastelColors = ['#FFD1DC', '#FFECB3', '#E0FFFF', '#DDA0DD', '#B0E0E6', '#FAFAD2', '#FFC0CB', '#ADD8E6', '#98FB98', '#F0E68C', '#FFE4E1', '#F5DEB3'];
+        const pastelColors = ['#FFD1DC', '#FFECB3', '#E0FFFF', '#d3c8e6', '#B0E0E6', '#FAFAD2', '#FFC0CB', '#ADD8E6', '#a7eba7', '#F0E68C', '#FFE4E1', '#F5DEB3'];
+
+        // --- 효과음 오디오 객체 ---
+        // 효과음을 사용하려면 move.mp3, correct.mp3, wrong.mp3 파일을 이 html 파일과 같은 폴더에 두어야 합니다.
+        const moveSound = new Audio('soothing-waterdrop.wav');
+        const correctSound = new Audio('soft_success_bell.wav');
+        const wrongSound = new Audio('cute-error.mp3');
+
 
         // DOM 요소
         const startButton = document.getElementById('start-button');
@@ -257,9 +273,12 @@
         const attemptsDisplay = document.getElementById('attempts-display');
         const correctModal = document.getElementById('correct-modal');
         const timeoutModal = document.getElementById('timeout-modal');
+        const timeoutModalTitle = document.getElementById('timeout-modal-title'); // 모달 제목 요소
         const nextStageButton = document.getElementById('next-stage-btn');
         const retryButton = document.getElementById('retry-btn');
         const restartButtons = document.querySelectorAll('.restart-btn');
+        const lottieCorrectContainer = document.getElementById('lottie-correct');
+        const lottieFailedContainer = document.getElementById('lottie-failed');
 
         // 게임 상태 변수
         let correctOrder = [];
@@ -267,16 +286,29 @@
         let sortable = null;
         let remainingAttempts = 3;
         const MAX_ATTEMPTS = 3;
+        let correctAnimation = null;
+        let failedAnimation = null;
 
         // 이벤트 리스너
         startButton.addEventListener('click', startGame);
         checkButton.addEventListener('click', checkAnswer);
-        nextStageButton.addEventListener('click', () => { correctModal.style.display = 'none'; startGame(); });
-        retryButton.addEventListener('click', () => { timeoutModal.style.display = 'none'; startGame(); });
+        nextStageButton.addEventListener('click', () => {
+            correctModal.style.display = 'none';
+            if (correctAnimation) correctAnimation.destroy(); // 성공 애니메이션 제거
+            startGame();
+        });
+        retryButton.addEventListener('click', () => {
+            timeoutModal.style.display = 'none';
+            if (failedAnimation) failedAnimation.destroy(); // 실패 애니메이션 제거
+            startGame();
+        });
         restartButtons.forEach(button => {
             button.addEventListener('click', () => {
                 [correctModal, timeoutModal].forEach(modal => modal.style.display = 'none');
                 stopTimer();
+                // 모든 애니메이션 인스턴스 제거
+                if (correctAnimation) correctAnimation.destroy();
+                if (failedAnimation) failedAnimation.destroy();
                 optionsDiv.style.display = 'block';
                 startButton.style.display = 'inline-block';
                 gameBoard.style.display = 'none';
@@ -293,14 +325,18 @@
                 timeLeft--;
                 const percentage = (timeLeft / duration) * 100;
                 timerBar.style.width = `${percentage}%`;
-                if (percentage <= 25) { timerBar.style.backgroundColor = '#dc3545'; }
+                if (percentage <= 25) { timerBar.style.backgroundColor = '#5a9981'; }
                 else if (percentage <= 50) { timerBar.style.backgroundColor = '#ffc107'; }
                 else { timerBar.style.backgroundColor = '#28a745'; }
                 const minutes = Math.floor(timeLeft / 60);
                 let seconds = timeLeft % 60;
                 seconds = seconds < 10 ? '0' + seconds : seconds;
                 timerDisplay.textContent = `남은 시간: ${minutes}:${seconds}`;
-                if (timeLeft <= 0) { stopTimer(); timeoutModal.style.display = 'flex'; }
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    timeoutModalTitle.innerHTML = '⏰ 시간 초과!'; // 모달 제목 설정
+                    timeoutModal.style.display = 'flex';
+                }
             }, 1000);
         }
 
@@ -341,21 +377,28 @@
                 cardContainer.appendChild(card);
             });
 
-            // 게임 시작 시 상태 초기화
             remainingAttempts = MAX_ATTEMPTS;
             updateAttemptsDisplay();
-            checkButton.disabled = false; // 버튼 활성화
+            checkButton.disabled = false;
             optionsDiv.style.display = 'none';
             startButton.style.display = 'none';
             gameBoard.style.display = 'block';
             resultDiv.textContent = '';
 
             if (sortable) { sortable.destroy(); }
-            sortable = new Sortable(cardContainer, { animation: 150 });
+            sortable = new Sortable(cardContainer, {
+                animation: 150,
+                // 카드를 드래그해서 놓았을 때(위치 변경 시) 효과음 재생
+                onEnd: function (evt) {
+                    moveSound.currentTime = 0; // 빠른 반복 재생을 위해 재생 위치를 처음으로 설정
+                    moveSound.play();
+                }
+            });
 
             stopTimer();
             const timerDuration = document.querySelector('input[name="timer"]:checked').value;
             if (timerDuration > 0) {
+                timerDisplay.style.display = 'block';
                 timerDisplay.textContent = `남은 시간: ${Math.floor(timerDuration / 60)}:00`;
                 startTimer(timerDuration);
             } else {
@@ -365,24 +408,68 @@
         }
 
         function checkAnswer() {
-            if (remainingAttempts <= 0) return; // 기회가 없으면 함수 종료
+            if (remainingAttempts <= 0) return;
 
             const currentOrder = Array.from(cardContainer.querySelectorAll('.card')).map(card => card.textContent);
             const isCorrect = JSON.stringify(currentOrder) === JSON.stringify(correctOrder);
 
             if (isCorrect) {
+                // --- 정답 로직 ---
+                correctSound.currentTime = 0;
+                correctSound.play();
                 stopTimer();
                 resultDiv.textContent = '';
                 correctModal.style.display = 'flex';
+
+                if (correctAnimation) correctAnimation.destroy(); // 이전 애니메이션 제거
+
+                // confetti.json을 불러와 lottie-correct 컨테이너에 재생
+                fetch('confetti.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        correctAnimation = lottie.loadAnimation({
+                            container: lottieCorrectContainer,
+                            renderer: 'svg',
+                            loop: false,
+                            autoplay: true,
+                            animationData: data
+                        });
+                    })
+                    .catch(error => console.error('성공 Lottie 파일을 불러오는 데 실패했습니다:', error));
+
             } else {
-                remainingAttempts--; // 기회 차감
-                updateAttemptsDisplay(); // 하트 UI 업데이트
-                resultDiv.textContent = '🤔 아쉬워요. 다시 시도해보세요!';
+                // 오답 효과음 재생
+                wrongSound.currentTime = 0;
+                wrongSound.play();
+
+                remainingAttempts--;
+                updateAttemptsDisplay();
+                resultDiv.textContent = '아쉬워요. 다시 시도해보세요!';
                 resultDiv.style.color = 'red';
 
                 if (remainingAttempts <= 0) {
-                    resultDiv.textContent = '기회를 모두 사용했습니다!';
-                    checkButton.disabled = true; // 버튼 비활성화
+                    // --- 기회 모두 소진 ---
+                    stopTimer();
+                    timeoutModalTitle.innerHTML = '💔 기회를 모두 사용했습니다!';
+                    timeoutModal.style.display = 'flex';
+                    checkButton.disabled = true;
+                    resultDiv.textContent = '';
+                    
+                    if (failedAnimation) failedAnimation.destroy(); // 이전 애니메이션 제거
+                    
+                    // cry.json을 불러와 lottie-failed 컨테이너에 재생
+                    fetch('cry.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            failedAnimation = lottie.loadAnimation({
+                                container: lottieFailedContainer,
+                                renderer: 'svg',
+                                loop: true, // 실패 애니메이션은 반복재생
+                                autoplay: true,
+                                animationData: data
+                            });
+                        })
+                        .catch(error => console.error('실패 Lottie 파일을 불러오는 데 실패했습니다:', error));
                 }
             }
         }
