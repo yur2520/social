@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="../styles.css">
+    <title>역사 카드 순서 맞추기</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        body {
+            font-family: 'SUITE Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        #game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #options,
+        #game-board {
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        #options label {
+            margin-right: 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .card {
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 1.2em;
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.2s;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .card.sortable-chosen {
+            cursor: grabbing;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 2px solid #007bff;
+        }
+
+        #card-container {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 버튼 비활성화 스타일 */
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* 게임 상단 정보 (타이머, 하트) */
+        #game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+
+        #timer-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #attempts-display {
+            font-size: 1.8em;
+            /* 하트 크기 */
+        }
+
+        .heart {
+            color: #dc3545;
+            /* 빨간 하트 */
+            transition: color 0.3s;
+        }
+
+        .heart.used {
+            color: #ced4da;
+            /* 회색 하트 */
+        }
+
+        #timer-bar-container {
+            width: 100%;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            height: 100%;
+            width: 100%;
+            border-radius: 6px;
+            background-color: #28a745;
+            transition: width 1s linear, background-color 0.5s;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content #next-stage-btn {
+            background-color: #28a745;
+        }
+
+        .modal-content #next-stage-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-container">
+        <h1>📜 역사 카드 순서 맞추기</h1>
+
+        <div id="options">
+            <div class="option-group">
+                <h3>출제 범위를 선택하세요:</h3>
+                <label><input type="checkbox" name="era" value="삼국시대" checked> 삼국시대</label>
+                <label><input type="checkbox" name="era" value="남북국시대" checked> 남북국 시대</label>
+                <label><input type="checkbox" name="era" value="후삼국시대" checked> 후삼국 시대</label>
+            </div>
+            <div class="option-group">
+                <h3>타이머를 선택하세요:</h3>
+                <label><input type="radio" name="timer" value="0" checked> 없음</label>
+                <label><input type="radio" name="timer" value="60"> 1분</label>
+                <label><input type="radio" name="timer" value="120"> 2분</label>
+            </div>
+        </div>
+
+        <button id="start-button">게임 시작</button>
+
+        <div id="game-board" style="display:none;">
+            <div id="game-info">
+                <div id="timer-display"></div>
+                <div id="attempts-display"></div>
+            </div>
+            <div id="timer-bar-container">
+                <div id="timer-bar"></div>
+            </div>
+            <p>카드를 드래그하여 시간 순서대로 정렬하세요.</p>
+            <div id="card-container"></div>
+            <br>
+            <button id="check-button">정답 확인</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <div id="correct-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color: green;">🎉 정답입니다! 대단해요!</h2>
+            <button id="next-stage-btn">다음 문제 풀기</button>
+            <button class="restart-btn">처음 화면으로</button>
+        </div>
+    </div>
+    <div id="timeout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color: red;">⏰ 시간 초과!</h2>
+            <button id="retry-btn">다시 도전하기</button>
+            <button class="restart-btn">처음 화면으로</button>
+        </div>
+    </div>
+
+    <script>
+        const allEvents = [{ era: '삼국시대', text: ['백제 근초고왕이 왕위에 오름', '백제의 전성기'] }, { era: '삼국시대', text: ['고구려 광개토대왕이 왕위에 오름'] }, { era: '삼국시대', text: ['고구려 장수왕이 왕위에 오름'] }, { era: '삼국시대', text: ['신라 진흥왕이 왕위에 오름', '신라의 전성기'] }, { era: '남북국시대', text: ['신라가 당과 동맹을 맺음', '나당동맹'] }, { era: '남북국시대', text: ['태종 무열왕이 왕위에 오름', '김춘추가 왕위에 오름'] }, { era: '남북국시대', text: ['백제 멸망'] }, { era: '남북국시대', text: ['고구려 멸망'] }, { era: '남북국시대', text: ['신라가 삼국을 통일'] }, { era: '남북국시대', text: ['발해가 건국됨'] }, { era: '후삼국시대', text: ['후백제가 건국됨'] }, { era: '후삼국시대', text: ['후고구려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 후삼국을 통일함'] }];
+        const pastelColors = ['#FFD1DC', '#FFECB3', '#E0FFFF', '#DDA0DD', '#B0E0E6', '#FAFAD2', '#FFC0CB', '#ADD8E6', '#98FB98', '#F0E68C', '#FFE4E1', '#F5DEB3'];
+
+        // DOM 요소
+        const startButton = document.getElementById('start-button');
+        const checkButton = document.getElementById('check-button');
+        const cardContainer = document.getElementById('card-container');
+        const resultDiv = document.getElementById('result');
+        const optionsDiv = document.getElementById('options');
+        const gameBoard = document.getElementById('game-board');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerBarContainer = document.getElementById('timer-bar-container');
+        const timerBar = document.getElementById('timer-bar');
+        const attemptsDisplay = document.getElementById('attempts-display');
+        const correctModal = document.getElementById('correct-modal');
+        const timeoutModal = document.getElementById('timeout-modal');
+        const nextStageButton = document.getElementById('next-stage-btn');
+        const retryButton = document.getElementById('retry-btn');
+        const restartButtons = document.querySelectorAll('.restart-btn');
+
+        // 게임 상태 변수
+        let correctOrder = [];
+        let timerInterval = null;
+        let sortable = null;
+        let remainingAttempts = 3;
+        const MAX_ATTEMPTS = 3;
+
+        // 이벤트 리스너
+        startButton.addEventListener('click', startGame);
+        checkButton.addEventListener('click', checkAnswer);
+        nextStageButton.addEventListener('click', () => { correctModal.style.display = 'none'; startGame(); });
+        retryButton.addEventListener('click', () => { timeoutModal.style.display = 'none'; startGame(); });
+        restartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                [correctModal, timeoutModal].forEach(modal => modal.style.display = 'none');
+                stopTimer();
+                optionsDiv.style.display = 'block';
+                startButton.style.display = 'inline-block';
+                gameBoard.style.display = 'none';
+                resultDiv.textContent = '';
+            });
+        });
+
+        // 타이머 함수
+        function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+        function startTimer(duration) {
+            let timeLeft = duration;
+            timerBarContainer.style.display = 'block';
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const percentage = (timeLeft / duration) * 100;
+                timerBar.style.width = `${percentage}%`;
+                if (percentage <= 25) { timerBar.style.backgroundColor = '#dc3545'; }
+                else if (percentage <= 50) { timerBar.style.backgroundColor = '#ffc107'; }
+                else { timerBar.style.backgroundColor = '#28a745'; }
+                const minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                timerDisplay.textContent = `남은 시간: ${minutes}:${seconds}`;
+                if (timeLeft <= 0) { stopTimer(); timeoutModal.style.display = 'flex'; }
+            }, 1000);
+        }
+
+        // 기회(하트) UI 업데이트 함수
+        function updateAttemptsDisplay() {
+            attemptsDisplay.innerHTML = '';
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const heart = document.createElement('span');
+                heart.textContent = '♥';
+                heart.className = i < remainingAttempts ? 'heart' : 'heart used';
+                attemptsDisplay.appendChild(heart);
+            }
+        }
+
+        // 게임 로직 함수
+        function startGame() {
+            const selectedEras = Array.from(document.querySelectorAll('input[name="era"]:checked')).map(cb => cb.value);
+            if (selectedEras.length === 0) { alert('하나 이상의 시대를 선택해주세요!'); return; }
+            let availableEvents = allEvents.filter(event => selectedEras.includes(event.era));
+            if (availableEvents.length < 4) { alert('선택한 시대의 카드 수가 4장 미만입니다. 다른 시대를 추가로 선택해주세요.'); return; }
+            let gameEvents = [];
+            let tempEvents = [...availableEvents];
+            while (gameEvents.length < 4 && tempEvents.length > 0) {
+                const randomIndex = Math.floor(Math.random() * tempEvents.length);
+                gameEvents.push(tempEvents.splice(randomIndex, 1)[0]);
+            }
+            gameEvents.sort((a, b) => allEvents.indexOf(a) - allEvents.indexOf(b));
+            correctOrder = gameEvents.map(event => event.text[Math.floor(Math.random() * event.text.length)]);
+            let shuffledEvents = [...correctOrder].sort(() => Math.random() - 0.5);
+
+            cardContainer.innerHTML = '';
+            shuffledEvents.forEach(text => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = text;
+                let randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+                card.style.backgroundColor = randomColor;
+                cardContainer.appendChild(card);
+            });
+
+            // 게임 시작 시 상태 초기화
+            remainingAttempts = MAX_ATTEMPTS;
+            updateAttemptsDisplay();
+            checkButton.disabled = false; // 버튼 활성화
+            optionsDiv.style.display = 'none';
+            startButton.style.display = 'none';
+            gameBoard.style.display = 'block';
+            resultDiv.textContent = '';
+
+            if (sortable) { sortable.destroy(); }
+            sortable = new Sortable(cardContainer, { animation: 150 });
+
+            stopTimer();
+            const timerDuration = document.querySelector('input[name="timer"]:checked').value;
+            if (timerDuration > 0) {
+                timerDisplay.textContent = `남은 시간: ${Math.floor(timerDuration / 60)}:00`;
+                startTimer(timerDuration);
+            } else {
+                timerDisplay.style.display = 'none';
+                timerBarContainer.style.display = 'none';
+            }
+        }
+
+        function checkAnswer() {
+            if (remainingAttempts <= 0) return; // 기회가 없으면 함수 종료
+
+            const currentOrder = Array.from(cardContainer.querySelectorAll('.card')).map(card => card.textContent);
+            const isCorrect = JSON.stringify(currentOrder) === JSON.stringify(correctOrder);
+
+            if (isCorrect) {
+                stopTimer();
+                resultDiv.textContent = '';
+                correctModal.style.display = 'flex';
+            } else {
+                remainingAttempts--; // 기회 차감
+                updateAttemptsDisplay(); // 하트 UI 업데이트
+                resultDiv.textContent = '🤔 아쉬워요. 다시 시도해보세요!';
+                resultDiv.style.color = 'red';
+
+                if (remainingAttempts <= 0) {
+                    resultDiv.textContent = '기회를 모두 사용했습니다!';
+                    checkButton.disabled = true; // 버튼 비활성화
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

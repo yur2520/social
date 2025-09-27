@@ -1,107 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="index-styles.css">
     <title>수업자료 모음</title>
     <style>
-        /* SUITE Variable 폰트 (로컬 파일) */
-        @font-face {
-            font-family: 'SUITE Variable';
-            font-weight: 300 900;
-            /* 폰트 파일 경로가 올바른지 확인해주세요. */
-            src: url('./SUITE-Variable.woff2') format('woff2-variations');
-        }
-
-        /* --- 기본 스타일 --- */
-        body {
-            /* SUITE Variable 폰트를 기본으로 사용하고, 없을 경우 Malgun Gothic을 사용합니다. */
-            font-family: 'SUITE Variable', 'Malgun Gothic', sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        /* --- 카드 레이아웃 컨테이너 --- */
-        .card-container {
-            display: flex; /* Flexbox 레이아웃 사용 */
-            justify-content: center; /* 가로 중앙 정렬 */
-            align-items: flex-start; /* 세로 상단 정렬 */
-            flex-wrap: wrap; /* 카드가 화면 너비를 넘어가면 다음 줄로 이동 */
-            gap: 40px; /* 카드 사이의 간격 */
-            padding: 50px 20px; /* 컨테이너 내부 여백 */
-            min-height: 100vh; /* 최소 높이를 화면 전체로 설정 */
-            box-sizing: border-box; /* padding을 포함하여 높이 계산 */
-        }
-
-        /* --- 개별 카드 스타일 --- */
-        .card {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 320px; /* 카드의 기본 너비 */
-            box-sizing: border-box;
-        }
-
-        /* --- 텍스트 및 버튼 스타일 (기존 스타일 유지) --- */
-        .card h1 {
-            color: #7ebad9;
-            margin-top: 0; /* h1 상단 마진 제거 */
-            margin-bottom: 20px;
-            font-size: 2.2em;
-            font-weight: 700;
-        }
-        
-        .card p {
-            margin-bottom: 30px;
-            font-size: 1em;
-            line-height: 1.6;
-        }
-
-        .button-group a {
-            display: block; /* 버튼을 블록 요소로 변경하여 한 줄에 하나씩 표시 */
-            background-color: #7ebad9;
-            color: white;
-            padding: 15px 25px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 500;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px; /* 버튼 사이의 간격 */
-        }
-
-        .button-group a:last-child {
-            margin-bottom: 0; /* 마지막 버튼의 하단 간격 제거 */
-        }
-
-        .button-group a:hover {
-            background-color: #24759e;
-            transform: translateY(-2px); /* 호버 시 살짝 위로 이동하는 효과 */
-        }
-        
-        /* 비활성화된 버튼 스타일 */
-        .button-group a.disabled {
-            background-color: #cdd2d5;
-            cursor: not-allowed;
-            pointer-events: none; /* 클릭 이벤트 비활성화 */
-        }
-        
-        .button-group a.disabled:hover {
-            transform: none;
-        }
 
     </style>
 </head>
-<body>
-    <div class="card-container">
-    
-        <div class="card">
+
+<body id="index-body">
+    <div id="index-card-container">
+
+        <div id="indexcard">
             <h1>5학년 1학기 사회</h1>
             <p>2. 인권 존중과 정의로운 사회</p>
             <div class="button-group">
@@ -110,29 +24,27 @@
                 <a href="권리와 의무의 관계.html">권리와 의무의 관계</a>
                 <a href="lawexforstudents.html">일상생활과 관련된 법률</a>
                 <a href="db.html">역할극대본</a>
+
+            </div>
+        </div>
+
+        <div id="indexcard">
+            <h1>5학년 2학기 사회</h1>
+            <p>한국사 관련 자료</p>
+            <div class="button-group">
+                <a href="historygame/history-order-game.html">역사적 사건 순서 맞추기</a>
+                <a href="historygame/history-person-game.html">역사 인물 맞추기</a>
+                <a href="bul.html">불교용어해설</a>
+                <a href="silla_balhae.html">통일신라와 발해의 문화유산</a>
+                <a href="samguk_culture.html">삼국시대의 문화유산</a>
+               
                 
             </div>
         </div>
 
- <div class="card">
-            <h1>5학년 2학기 사회</h1>
-            <p>한국사 관련 자료</p>
-            <div class="button-group">
-                <a href="historygame/historygame.html">순서맞추기게임</a>
-                <a href="bul.html">불교용어해설</a>
-                <a href="silla_balhae.html">통일신라와 발해의 문화유산</a>
-                <a href="samguk_culture.html">삼국시대의 문화유산</a>
-                <!--        
-                <a href="db.html">역할극대본</a>
-                 비활성화된 버튼 예시 -->
-                <a href="#" class="disabled">자료 준비 중</a>
-            </div>
-        </div>
 
 
-       
     </div>
 </body>
+
 </html>
-
-

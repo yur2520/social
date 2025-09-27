@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 인물 카드 맞추기 게임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'SUITE Variable', 'Noto Sans KR', sans-serif;
+        }
+
+        /* 카드 뒤집기 애니메이션을 위한 스타일 */
+        .card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card .front,
+        .card .back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .card .front {
+            transform: rotateY(180deg);
+        }
+
+        /* 스크롤바 디자인 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+       
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-4xl mx-auto">
+
+        <div id="start-screen" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+            <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-2">한국사 인물 카드 맞추기</h1>
+            <p class="text-center text-gray-500 mb-6">게임에 출제할 인물을 8명 이상 선택해주세요.</p>
+
+            <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                <div class="flex flex-wrap gap-2">
+                    <button id="select-all-btn"
+                        class="bg-[#eb9c9f] hover:bg-[#da6b74] text-white font-bold py-2 px-4 rounded-lg transition-colors">모두
+                        선택</button>
+                    <button id="deselect-all-btn"
+                        class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition-colors">모두
+                        해제</button>
+                    <button id="select-goryeo-btn"
+                        class="bg-[#7ebad9] hover:bg-[#24759e] text-white font-bold py-2 px-4 rounded-lg transition-colors">고려시대까지
+                        선택</button>
+                    <button id="select-special-btn"
+                        class="bg-[#7ebad9] hover:bg-[#24759e] text-white font-bold py-2 px-4 rounded-lg transition-colors">15개정/천재(김정인)
+                        선택</button>
+                </div>
+                <div id="selection-count" class="text-lg font-semibold text-[#24759e]">0명 선택됨</div>
+            </div>
+
+            <div id="figure-selection-list"
+                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-h-64 overflow-y-auto p-4 bg-gray-50 rounded-lg custom-scrollbar">
+                </div>
+
+            <button id="start-game-btn"
+                class="w-full mt-6 bg-[#9dcabb] hover:bg-[#5a9981] text-white font-bold py-3 px-4 rounded-lg text-xl transition-transform transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:transform-none">
+                게임 시작
+            </button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">인물 카드 맞추기</h1>
+                <div>
+                    <button id="restart-game-btn"
+                        class="bg-[#7ebad9] hover:bg-[#24759e] text-white font-bold py-2 px-4 rounded-lg transition-colors mr-2">다시하기</button>
+                    <button id="back-to-start-btn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">처음으로</button>
+                </div>
+            </div>
+            <div id="game-board" class="grid grid-cols-4 gap-2 sm:gap-4 aspect-[2/3]">
+                </div>
+        </div>
+
+        <div id="success-modal"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-2xl shadow-xl text-center transform transition-all scale-95 opacity-0">
+                <h2 class="text-4xl font-bold text-[#5a9981] mb-4">성공!</h2>
+                <p class="text-gray-600 text-lg mb-6">모든 인물 카드를 맞혔습니다!</p>
+                <div class="flex justify-center gap-4">
+                    <button id="modal-restart-btn"
+                        class="bg-[#7ebad9] hover:bg-[#24759e] text-white font-bold py-2 px-6 rounded-lg text-lg transition-colors">다시하기</button>
+                    <button id="modal-back-to-start-btn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg text-lg transition-colors">처음으로</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="flip-sound" src="bubbleflip.wav" preload="auto"></audio>
+    <audio id="match-sound" src="brightbell_success.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="brightbell_success.mp3" preload="auto"></audio>
+    <script type="module">
+        import { figuresData } from './figures-data.js';
+
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const figureSelectionList = document.getElementById('figure-selection-list');
+        const selectionCount = document.getElementById('selection-count');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const deselectAllBtn = document.getElementById('deselect-all-btn');
+        const gameBoard = document.getElementById('game-board');
+        const restartGameBtn = document.getElementById('restart-game-btn');
+        const backToStartBtn = document.getElementById('back-to-start-btn');
+        const successModal = document.getElementById('success-modal');
+        const modalContent = successModal.querySelector('div');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
+        const modalBackToStartBtn = document.getElementById('modal-back-to-start-btn');
+        const selectGoryeoBtn = document.getElementById('select-goryeo-btn');
+        const selectSpecialBtn = document.getElementById('select-special-btn');
+        const flipSound = document.getElementById('flip-sound');
+        const matchSound = document.getElementById('match-sound');
+        const successSound = document.getElementById('success-sound');
+
+        // 게임 상태 변수
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+        let matchedPairs = 0;
+        let selectedFiguresForGame = [];
+        const TOTAL_PAIRS = 8;
+
+        // 시작 화면 초기화
+        function initializeStartScreen() {
+            figureSelectionList.innerHTML = '';
+            figuresData.forEach(figure => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="fig-${figure.id}" value="${figure.id}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="fig-${figure.id}" class="ml-2 block text-sm text-gray-900 cursor-pointer">${figure.name.replace('<br>', ' ')}</label>
+                `;
+                figureSelectionList.appendChild(div);
+            });
+            updateSelectionCount();
+        }
+
+        // 선택된 인물 수 업데이트
+        function updateSelectionCount() {
+            const checkedBoxes = figureSelectionList.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checkedBoxes.length;
+            selectionCount.textContent = `${count}명 선택됨`;
+            startGameBtn.disabled = count < TOTAL_PAIRS;
+        }
+
+        // 게임 시작
+        function startGame() {
+            const checkedBoxes = Array.from(figureSelectionList.querySelectorAll('input[type="checkbox"]:checked'));
+            const selectedIds = checkedBoxes.map(cb => cb.value);
+
+            selectedFiguresForGame = figuresData.filter(fig => selectedIds.includes(fig.id));
+
+            if (selectedFiguresForGame.length < TOTAL_PAIRS) {
+                // 이 부분은 버튼 비활성화로 처리되므로 실제로는 거의 호출되지 않음
+                alert(`최소 ${TOTAL_PAIRS}명의 인물을 선택해야 합니다.`);
+                return;
+            }
+
+            // 화면 전환
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+
+            initializeGame();
+        }
+
+        // 게임 보드 초기화 및 생성
+        function initializeGame() {
+            resetGameState();
+            gameBoard.innerHTML = '';
+
+            // 선택된 인물 중에서 8명을 무작위로 선택
+            const gameFigures = shuffleArray(selectedFiguresForGame).slice(0, TOTAL_PAIRS);
+
+            // 8명의 인물로 16장의 카드(인물 8 + 설명 8) 생성
+            const cards = [];
+            gameFigures.forEach(figure => {
+                cards.push({ type: 'name', content: figure.name, id: figure.id });
+                cards.push({ type: 'description', content: figure.description, id: figure.id });
+            });
+
+            // 카드 섞기
+            const shuffledCards = shuffleArray(cards);
+
+            // 카드 DOM 요소 생성
+            shuffledCards.forEach(cardData => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card', 'w-full', 'h-full', 'relative', 'cursor-pointer');
+                cardElement.dataset.id = cardData.id;
+
+                const isNameCard = cardData.type === 'name';
+                const fontClasses = isNameCard
+                    ? 'text-lg sm:text-xl md:text-2xl font-bold'
+                    : 'text-xs sm:text-sm md:text-base';
+
+                const innerDivClasses = isNameCard
+                    ? `${fontClasses} text-gray-800`
+                    : `${fontClasses} text-gray-800 custom-scrollbar overflow-y-auto max-h-full`;
+
+               cardElement.innerHTML = `
+                    <div class="back absolute w-full h-full rounded-lg bg-slate-400 ring-4 ring-slate-500 ring-inset shadow-md"></div>
+                    <div class="front absolute w-full h-full rounded-lg bg-white flex items-center justify-center p-2 sm:p-4 text-center shadow-md">
+                        <div class="${innerDivClasses}">${cardData.content}</div>
+                    </div>
+                `;
+                cardElement.addEventListener('click', flipCard);
+                gameBoard.appendChild(cardElement);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            flipSound.currentTime = 0; // 소리를 처음부터 재생하기 위해
+            flipSound.play();
+
+            this.classList.add('flipped');
+
+            if (!hasFlippedCard) {
+                // 첫 번째 카드
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+
+            // 두 번째 카드
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.id === secondCard.dataset.id;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+             matchSound.currentTime = 0;
+            matchSound.play();
+
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+
+            // 매칭된 카드의 색상을 변경
+            const colors = ['bg-green-200', 'bg-blue-200', 'bg-yellow-200', 'bg-pink-200', 'bg-purple-200', 'bg-red-200', 'bg-teal-200', 'bg-orange-200'];
+            const color = colors[matchedPairs % colors.length];
+
+            firstCard.querySelector('.front').classList.remove('bg-white');
+            secondCard.querySelector('.front').classList.remove('bg-white');
+            firstCard.querySelector('.front').classList.add(color);
+            secondCard.querySelector('.front').classList.add(color);
+
+            matchedPairs++;
+            resetBoard();
+
+            if (matchedPairs === TOTAL_PAIRS) {
+                setTimeout(() => {
+                    successSound.play(); // 게임 완료 효과음
+                    showSuccessModal();
+                }, 1000);
+                
+            }
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                resetBoard();
+            }, 1200);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        function resetGameState() {
+            matchedPairs = 0;
+            resetBoard();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showSuccessModal() {
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function hideSuccessModal() {
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                successModal.classList.add('hidden');
+                successModal.classList.remove('flex');
+            }, 300);
+        }
+
+        function handleRestart() {
+            hideSuccessModal();
+            initializeGame();
+        }
+
+        function handleBackToStart() {
+            hideSuccessModal();
+            gameScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            initializeStartScreen();
+        }
+
+        // 이벤트 리스너 연결
+        document.addEventListener('DOMContentLoaded', initializeStartScreen);
+        figureSelectionList.addEventListener('change', updateSelectionCount);
+
+        selectAllBtn.addEventListener('click', () => {
+            figureSelectionList.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            updateSelectionCount();
+        });
+
+        deselectAllBtn.addEventListener('click', () => {
+            figureSelectionList.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateSelectionCount();
+        });
+
+        selectGoryeoBtn.addEventListener('click', () => {
+            const allCheckboxes = Array.from(figureSelectionList.querySelectorAll('input[type="checkbox"]'));
+            const goryeoLastFigureId = 'gongmin';
+            const lastIndex = figuresData.findIndex(fig => fig.id === goryeoLastFigureId);
+
+            allCheckboxes.forEach(cb => {
+                const figureIndex = figuresData.findIndex(fig => fig.id === cb.value);
+                cb.checked = figureIndex !== -1 && figureIndex <= lastIndex;
+            });
+            updateSelectionCount();
+        });
+
+        selectSpecialBtn.addEventListener('click', () => {
+            const allCheckboxes = Array.from(figureSelectionList.querySelectorAll('input[type="checkbox"]'));
+            const excludedIds = ['sosurim', 'beopheung', 'seondeok', 'wonhyo', 'gwangjong', 'seongjong', 'parkjiwon'];
+
+            allCheckboxes.forEach(cb => {
+                cb.checked = !excludedIds.includes(cb.value);
+            });
+            updateSelectionCount();
+        });
+
+        startGameBtn.addEventListener('click', startGame);
+        restartGameBtn.addEventListener('click', handleRestart);
+        backToStartBtn.addEventListener('click', handleBackToStart);
+        modalRestartBtn.addEventListener('click', handleRestart);
+        modalBackToStartBtn.addEventListener('click', handleBackToStart);
+    </script>
+</body>
+
+</html>
