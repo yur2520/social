@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="../styles.css">
     <title>역사 카드 순서 맞추기</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         body {
@@ -35,9 +35,13 @@
             color: #333;
             margin-bottom: 20px;
         }
-        
-        hr{color:#ccc;
+
+        h3 {
+            color: #333;
+            margin-top: auto;
+            margin-bottom: 1rem;
         }
+
 
         #options,
         #game-board {
@@ -45,7 +49,10 @@
         }
 
         .option-group {
+            background-color: #f9f9fa;
+            padding: 1em;
             margin-bottom: 20px;
+            border-radius: 8px;
         }
 
         #options label {
@@ -65,19 +72,26 @@
             transition: box-shadow 0.2s;
             color: #333;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 3;
         }
 
         .card.sortable-chosen {
             cursor: grabbing;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset 1px 1px 2px rgba(255, 255, 255, 0.596);
+            box-shadow: 1px 8px 16px rgba(0, 0, 0, 0.2), inset 1px 1px 2px rgba(255, 255, 255, 0.596);
             border: 2px solid #ffffff;
+            transform: scale(1.05, 1.1);
+            transition: ease-out;
+            z-index: 4;
         }
 
         #card-container {
-            border: 2px solid #ccc;
+            border: 0px solid #e9e9e9;
+            box-shadow: inset 1px 1px 2px rgba(168, 168, 168, 0.425);
+            background-color: #fdfdfd;
             border-radius: 8px;
             padding: 10px;
             min-height: 100px;
+            z-index: 2;
         }
 
         button {
@@ -91,6 +105,13 @@
             cursor: pointer;
             transition: background-color 0.2s;
             margin: 5px;
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--d-blue);
+        }
+         input[type="radio"] {
+            accent-color: var(--d-blue);
         }
 
         button:hover {
@@ -127,7 +148,7 @@
         }
 
         .heart {
-            color: #ec4d5d;
+            color: #fd5767;
             transition: color 0.3s;
         }
 
@@ -199,12 +220,14 @@
         <h1>역사 카드 순서 맞추기</h1>
 
         <div id="options">
-            <hr>
+
             <div class="option-group">
                 <h3>출제 범위</h3>
                 <label><input type="checkbox" name="era" value="삼국시대" checked> 삼국시대</label>
                 <label><input type="checkbox" name="era" value="남북국시대" checked> 남북국 시대</label>
                 <label><input type="checkbox" name="era" value="후삼국시대" checked> 후삼국 시대</label>
+                <label><input type="checkbox" name="era" value="고려시대" checked> 고려시대</label>
+                <label><input type="checkbox" name="era" value="조선전기" checked> 조선 전기</label>  
             </div>
             <div class="option-group">
                 <h3>타이머</h3>
@@ -249,8 +272,9 @@
         </div>
     </div>
 
-    <script>
-        const allEvents = [{ era: '삼국시대', text: ['백제 근초고왕이 왕위에 오름', '백제의 전성기'] }, { era: '삼국시대', text: ['고구려 광개토대왕이 왕위에 오름'] }, { era: '삼국시대', text: ['고구려 장수왕이 왕위에 오름'] }, { era: '삼국시대', text: ['신라 진흥왕이 왕위에 오름', '신라의 전성기'] }, { era: '남북국시대', text: ['신라가 당과 동맹을 맺음', '나당동맹'] }, { era: '남북국시대', text: ['태종 무열왕이 왕위에 오름', '김춘추가 왕위에 오름'] }, { era: '남북국시대', text: ['백제 멸망'] }, { era: '남북국시대', text: ['고구려 멸망'] }, { era: '남북국시대', text: ['신라가 삼국을 통일'] }, { era: '남북국시대', text: ['발해가 건국됨'] }, { era: '후삼국시대', text: ['후백제가 건국됨'] }, { era: '후삼국시대', text: ['후고구려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 건국됨'] }, { era: '후삼국시대', text: ['고려가 후삼국을 통일함'] }];
+   <script type="module">
+        // 1. events.js 파일에서 allEvents 배열을 가져옵니다.
+        import allEvents from './events.js';
         const pastelColors = ['#FFD1DC', '#FFECB3', '#E0FFFF', '#d3c8e6', '#B0E0E6', '#FAFAD2', '#FFC0CB', '#ADD8E6', '#a7eba7', '#F0E68C', '#FFE4E1', '#F5DEB3'];
 
         // --- 효과음 오디오 객체 ---
@@ -325,13 +349,13 @@
                 timeLeft--;
                 const percentage = (timeLeft / duration) * 100;
                 timerBar.style.width = `${percentage}%`;
-                if (percentage <= 25) { timerBar.style.backgroundColor = '#5a9981'; }
+                if (percentage <= 25) { timerBar.style.backgroundColor = '#ed4552'; }
                 else if (percentage <= 50) { timerBar.style.backgroundColor = '#ffc107'; }
-                else { timerBar.style.backgroundColor = '#28a745'; }
+                else { timerBar.style.backgroundColor = '#5a9981'; }
                 const minutes = Math.floor(timeLeft / 60);
                 let seconds = timeLeft % 60;
                 seconds = seconds < 10 ? '0' + seconds : seconds;
-                timerDisplay.textContent = `남은 시간: ${minutes}:${seconds}`;
+                timerDisplay.textContent = `남은 시간 ${minutes}:${seconds}`;
                 if (timeLeft <= 0) {
                     stopTimer();
                     timeoutModalTitle.innerHTML = '⏰ 시간 초과!'; // 모달 제목 설정
@@ -399,7 +423,7 @@
             const timerDuration = document.querySelector('input[name="timer"]:checked').value;
             if (timerDuration > 0) {
                 timerDisplay.style.display = 'block';
-                timerDisplay.textContent = `남은 시간: ${Math.floor(timerDuration / 60)}:00`;
+                timerDisplay.textContent = `남은 시간 ${Math.floor(timerDuration / 60)}:00`;
                 startTimer(timerDuration);
             } else {
                 timerDisplay.style.display = 'none';
@@ -430,7 +454,7 @@
                         correctAnimation = lottie.loadAnimation({
                             container: lottieCorrectContainer,
                             renderer: 'svg',
-                            loop: false,
+                            loop: true,
                             autoplay: true,
                             animationData: data
                         });
@@ -445,7 +469,7 @@
                 remainingAttempts--;
                 updateAttemptsDisplay();
                 resultDiv.textContent = '아쉬워요. 다시 시도해보세요!';
-                resultDiv.style.color = 'red';
+                resultDiv.style.color = '#da6b74'
 
                 if (remainingAttempts <= 0) {
                     // --- 기회 모두 소진 ---
@@ -454,9 +478,9 @@
                     timeoutModal.style.display = 'flex';
                     checkButton.disabled = true;
                     resultDiv.textContent = '';
-                    
+
                     if (failedAnimation) failedAnimation.destroy(); // 이전 애니메이션 제거
-                    
+
                     // cry.json을 불러와 lottie-failed 컨테이너에 재생
                     fetch('cry.json')
                         .then(response => response.json())
