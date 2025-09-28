@@ -391,13 +391,14 @@
             correctOrder = gameEvents.map(event => event.text[Math.floor(Math.random() * event.text.length)]);
             let shuffledEvents = [...correctOrder].sort(() => Math.random() - 0.5);
 
+            const shuffledColors = [...pastelColors].sort(() => Math.random() - 0.5);
+
             cardContainer.innerHTML = '';
-            shuffledEvents.forEach(text => {
+            shuffledEvents.forEach((text, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.textContent = text;
-                let randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
-                card.style.backgroundColor = randomColor;
+                card.style.backgroundColor = shuffledColors[index];
                 cardContainer.appendChild(card);
             });
 
